@@ -4,6 +4,7 @@ import "bufio"
 import "os"
 import "strconv"
 import "strings"
+import "sort"
 
 func GetPath(g map[string][]string, s string) map[string]map[string]int {
     bfsData := map[string]map[string]int{}
@@ -50,12 +51,12 @@ func main() {
     e := 0
     for i := 1; i < len(input); i+=e+2 {
         test_graph := map[string][]string{}
-        this_info := strings.Fields(input[i])
-        n, err := strconv.Atoi(this_info[0])
+        n_and_e_count := strings.Fields(input[i])
+        n, err := strconv.Atoi(n_and_e_count[0])
         if err != nil {
             panic(err)
         }
-        this_e, err := strconv.Atoi(this_info[1])
+        this_e, err := strconv.Atoi(n_and_e_count[1])
         if err != nil {
             panic(err)
         }
@@ -74,9 +75,15 @@ func main() {
         }
 
         d := GetPath(test_graph, start_node)
-        for i := 0; i < len(d); i++ {
-            if (strconv.Itoa(i + 1) != start_node) {
-                fmt.Printf("%d ", d[strconv.Itoa(i + 1)]["distance"])
+        keys := []string{}
+        for k := range d {
+            keys = append(keys, k)
+        }
+        sort.Strings(keys)
+        
+        for _, k := range keys {
+            if (k != start_node) {
+                fmt.Printf("%d ", d[k]["distance"])
             }
         }
         fmt.Printf("\n")
